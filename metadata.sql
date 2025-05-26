@@ -1,38 +1,80 @@
-CREATE TABLE products (
-  product_id INTEGER PRIMARY KEY, -- Unique ID for each product
-  name VARCHAR(50), -- Name of the product
-  price DECIMAL(10,2), -- Price of each unit of the product
-  quantity INTEGER  -- Current quantity in stock
+CREATE TABLE department (
+    dept_no TEXT PRIMARY KEY,
+    dept_name TEXT UNIQUE
 );
 
-CREATE TABLE customers (
-   customer_id INTEGER PRIMARY KEY, -- Unique ID for each customer
-   name VARCHAR(50), -- Name of the customer
-   address VARCHAR(100) -- Mailing address of the customer
+CREATE TABLE employee (
+    emp_no SERIAL PRIMARY KEY,
+    birth_date DATE,
+    first_name TEXT,
+    last_name TEXT,
+    gender TEXT,
+    hire_date DATE
 );
 
-CREATE TABLE salespeople (
-  salesperson_id INTEGER PRIMARY KEY, -- Unique ID for each salesperson 
-  name VARCHAR(50), -- Name of the salesperson
-  region VARCHAR(50) -- Geographic sales region 
+CREATE TABLE dept_emp (
+    emp_no INTEGER,
+    dept_no TEXT,
+    from_date DATE,
+    to_date DATE,
+    PRIMARY KEY (emp_no, dept_no),
+    FOREIGN KEY (emp_no) REFERENCES employee(emp_no),
+    FOREIGN KEY (dept_no) REFERENCES department(dept_no)
 );
 
-CREATE TABLE sales (
-  sale_id INTEGER PRIMARY KEY, -- Unique ID for each sale
-  product_id INTEGER, -- ID of product sold
-  customer_id INTEGER,  -- ID of customer who made purchase
-  salesperson_id INTEGER, -- ID of salesperson who made the sale
-  sale_date DATE, -- Date the sale occurred 
-  quantity INTEGER -- Quantity of product sold
+CREATE TABLE dept_manager (
+    emp_no INTEGER,
+    dept_no TEXT,
+    from_date DATE,
+    to_date DATE,
+    PRIMARY KEY (emp_no, dept_no),
+    FOREIGN KEY (emp_no) REFERENCES employee(emp_no),
+    FOREIGN KEY (dept_no) REFERENCES department(dept_no)
 );
 
-CREATE TABLE product_suppliers (
-  supplier_id INTEGER PRIMARY KEY, -- Unique ID for each supplier
-  product_id INTEGER, -- Product ID supplied
-  supply_price DECIMAL(10,2) -- Unit price charged by supplier
+CREATE TABLE salary (
+    emp_no INTEGER,
+    amount INTEGER,
+    from_date DATE,
+    to_date DATE,
+    PRIMARY KEY (emp_no, from_date),
+    FOREIGN KEY (emp_no) REFERENCES employee(emp_no)
 );
 
--- sales.product_id can be joined with products.product_id
--- sales.customer_id can be joined with customers.customer_id 
--- sales.salesperson_id can be joined with salespeople.salesperson_id
--- product_suppliers.product_id can be joined with products.product_id
+CREATE TABLE title (
+    emp_no INTEGER,
+    title TEXT,
+    from_date DATE,
+    to_date DATE,
+    PRIMARY KEY (emp_no, title, from_date),
+    FOREIGN KEY (emp_no) REFERENCES employee(emp_no)
+);
+
+CREATE TABLE employee_login (
+    login_id SERIAL PRIMARY KEY,
+    emp_no INTEGER NOT NULL,
+    username VARCHAR(50) UNIQUE NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    last_login TIMESTAMP,
+    FOREIGN KEY (emp_no) REFERENCES employee(emp_no)
+);
+
+CREATE TABLE manager_department_access (
+    emp_no INTEGER,
+    dept_no TEXT,
+    access_granted_date DATE DEFAULT CURRENT_DATE,
+    PRIMARY KEY (emp_no, dept_no),
+    FOREIGN KEY (emp_no) REFERENCES employee(emp_no),
+    FOREIGN KEY (dept_no) REFERENCES department(dept_no)
+);
+
+-- dept_emp.emp_no can be joined with employee.emp_no
+-- dept_emp.dept_no can be joined with department.dept_no
+-- dept_manager.emp_no can be joined with employee.emp_no
+-- dept_manager.dept_no can be joined with department.dept_no
+-- salary.emp_no can be joined with employee.emp_no
+-- title.emp_no can be joined with employee.emp_no
+-- employee_login.emp_no can be joined with employee.emp_no
+-- manager_department_access.emp_no can be joined with employee.emp_no
+-- manager_department_access.dept_no can be joined with department.dept_no
