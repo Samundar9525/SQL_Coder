@@ -9,17 +9,7 @@ This project demonstrates how to fine-tune a language model for SQL generation f
 
 ## Architecture Diagram
 
-```mermaid
-flowchart TD
-    A[CSV File<br>(Questions & SQL)] --> B[Prompt Engineering<br>Format Input/Output]
-    B --> C[Fine-tuned LLM<br>(TinyLlama + LoRA)]
-    C --> D[Generate SQL Query]
-    D --> E[PostgreSQL Database]
-    E --> F[Query Results]
-    F --> G[Evaluation & Accuracy Calculation]
-    style A fill:#f9f,stroke:#333,stroke-width:1px
-    style E fill:#bbf,stroke:#333,stroke-width:1px
-```
+![SQL Generation Model Architecture](https://raw.githubusercontent.com/GitHubCopilot-Images/sql-coder-arch/main/sql-coder-architecture.png)
 
 **Description:**  
 - The process starts with a CSV file containing question/SQL pairs.
